@@ -51,9 +51,16 @@ def create_message(request: KafkaRequest):
 
 
 def handle_client(client):
-    request = KafkaRequest.from_client(client)
-    client.sendall(create_message(request))
-    client.close()
+    try:
+        while True:
+            request = KafkaRequest.from_client(client)
+            if not request:
+                break
+            client.sendall(create_message(request))
+    except Exception as e:
+        print(f"Error handling client: {e}")
+    finally:
+        client.close()
 
 
 def main():
