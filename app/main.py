@@ -1,4 +1,5 @@
 import socket
+import threading
 from dataclasses import dataclass
 from enum import Enum, unique
 
@@ -68,7 +69,8 @@ def main():
     # server.accept()
     while True:
         client, _ = server.accept()
-        handle_client(client)
+        client_thread = threading.Thread(target=handle_client, args=(client,))
+        client_thread.start()
 
 
 if __name__ == "__main__":
